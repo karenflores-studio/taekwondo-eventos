@@ -14,8 +14,8 @@ Alumna: **Karen Apaza Flores**
 
 | | |
 |---|---|
-| **Backend** | Node.js · Express 5 · MongoDB (driver nativo) · JSON Web Tokens · bcrypt · zod · cors |
-| **Frontend** | React 19 · Vite · React Router · Context API · react-hook-form · zod · Bootstrap 5 |
+| **Backend** | Node.js · Express 5 · MongoDB |
+| **Frontend** | React 19 · Vite · Bootstrap 5 |
 
 El backend es una **API REST** independiente; el frontend es una aplicación de React que la consume por HTTP. Son dos proyectos separados que se levantan por su cuenta.
 
