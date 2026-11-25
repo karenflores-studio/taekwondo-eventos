@@ -51,7 +51,7 @@ Levantar la API:
 npm run dev
 ```
 
-Queda escuchando en **http://localhost:3333**. Al arrancar avisa por consola si se conectó a la base.
+Queda en **http://localhost:3333**. Al arrancar avisa por consola si se conectó a la base.
 
 ### 2. Frontend
 
@@ -166,7 +166,7 @@ parcial2/
 │   ├── api/
 │   │   ├── controllers/           coordinan los pedidos y devuelven json
 │   │   └── routes/                mapean url + verbo a cada controller
-│   ├── services/                  ⭐ unica capa que habla con mongo
+│   ├── services/                  - unica capa que habla con mongo
 │   ├── middlewares/               autenticacion (jwt) y validacion (zod)
 │   ├── schemas/                   esquemas de zod de cada entidad
 │   ├── prueba.http                peticiones de ejemplo para probar la api
@@ -181,7 +181,7 @@ parcial2/
         ├── hooks/                 useValidacion, hook propio de validación
         ├── pages/                 una carpeta por entidad
         ├── schemas/               esquemas de zod, espejo de los del backend
-        ├── services/              ⭐ toda la comunicación con la API
+        ├── services/              - toda la comunicación con la API
         ├── estilo.css             paleta e identidad visual propia
         └── main.jsx               ruteo
 ```
@@ -309,34 +309,4 @@ La validación del frontend es por comodidad de quien usa la aplicación: **la q
 **Estados de carga.** Las listas manejan tres estados (`loading`, `ready`, `error`) con componentes separados, así se distingue "está cargando" de "no hay datos" y de "falló la consulta".
 
 **Borrado lógico de eventos.** Los eventos se marcan con `eliminado` en lugar de borrarse, así se pueden recuperar.
-
 ---
-
-## Cumplimiento de la consigna
-
-### Backend
-
-- [x] Backend separado del frontend, como API REST
-- [x] Autenticación con JWT
-- [x] Base de datos NoSQL (MongoDB)
-- [x] Gestión de usuarios
-- [x] Dos entidades además de los usuarios (`eventos` y `profesores`)
-- [x] CRUD completo de las dos entidades
-- [x] División en controladores, routers, servicios, middlewares y esquemas
-- [x] Recursos identificados en las URIs
-
-### Frontend
-
-- [x] Componentes funcionales y hooks (incluido un hook propio)
-- [x] División de componentes
-- [x] Enrutamiento con React Router
-- [x] Lógica de API separada de las vistas
-- [x] Estado gestionado con Context API y `useState`
-
-### Ambos
-
-- [x] Validación de datos en backend y frontend
-- [x] Autenticación con JWT
-- [x] Login y registro con contraseñas encriptadas
-- [x] Consumo de la API desde el frontend
-- [x] Archivo README
