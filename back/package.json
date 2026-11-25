@@ -1,0 +1,28 @@
+{
+  "name": "parcial-aplicaciones-hibridas",
+  "version": "1.0.0",
+  "description": "API REST de eventos de taekwondo - Parcial 2 Aplicaciones Hibridas",
+  "main": "main.js",
+  "scripts": {
+    "dev": "nodemon --env-file=.env main.js",
+    "start": "node --env-file=.env main.js"
+  },
+  "keywords": [],
+  "author": "Karen Apaza Flores",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.6.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
+  }
+}

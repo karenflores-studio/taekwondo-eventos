@@ -1,0 +1,8 @@
+### Intentar publicar evento como usuario común
+POST http://localhost:3333/api/eventos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGNob25naG9uZy5jb20iLCJyb2wiOiJhZG1pbiIsImlhdCI6MTc5NTEzMTk0NiwiZXhwIjoxNzk1MTM5MTQ2fQ.9YAb3GA-MFu8wLFlt08cT2nWY8IENgU68vg4ykCu0V0
+
+{
+    "nombre": "Evento de prueba"
+}
