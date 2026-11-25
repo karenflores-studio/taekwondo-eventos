@@ -28,29 +28,7 @@ export async function saveEvento(evento) {
     return evento
 }
 
-export async function editEvento(id, evento) {
 
-    if (evento.profesorId) {
-        evento.profesorId = new ObjectId(evento.profesorId)
-    }
-
-    await db.collection("eventos").updateOne(
-        { _id: new ObjectId(id) },
-        { $set: evento }
-    )
-
-    return await getEventoById(id)
-}
-
-export async function deleteEventoLogico(id) {
-
-    await db.collection("eventos").updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { eliminado: true } }
-    )
-
-    return await getEventoById(id)
-}
 
 export async function updateEvento(id, evento) {
 

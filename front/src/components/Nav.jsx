@@ -1,10 +1,13 @@
 
 import { Link, useNavigate } from 'react-router'
-import { useUsuario, useLogout } from '../context/session.context'
+import { useUsuario, useLogout, useRol } from '../context/session.context'
 
 export default function Nav() {
     const usuario = useUsuario()
     const logout = useLogout()
+
+    // el rol sale del token firmado, no del objeto guardado en localStorage
+    const rol = useRol()
     const navigate = useNavigate()
 
     const cerrarSesion = () => {
@@ -22,12 +25,12 @@ export default function Nav() {
 
                 <Link
                     className="navbar-brand"
-                    to={usuario.rol === 'user' ? '/eventos-usuario' : '/eventos'}
+                    to={rol() === 'user' ? '/eventos-usuario' : '/eventos'}
                 >
                     <img src="/logo.png" alt="Taekwondo Eventos" height="40" />
                 </Link>
 
-                {usuario.rol !== 'user' && (
+                {rol() !== 'user' && (
                     <div className="navbar-nav me-auto">
                         <Link className="nav-link" to="/">
                             Home
@@ -37,7 +40,7 @@ export default function Nav() {
                             Eventos
                         </Link>
 
-                        {usuario.rol === 'admin' && (
+                        {rol() === 'admin' && (
                             <Link className="nav-link" to="/profesores">
                                 Profesores
                             </Link>
@@ -46,7 +49,7 @@ export default function Nav() {
                 )}
 
                 <div className="d-flex align-items-center gap-3">
-                    {usuario.rol !== 'user' && (
+                    {rol() !== 'user' && (
                         <span className="navbar-text">
                             {usuario.name}
                         </span>

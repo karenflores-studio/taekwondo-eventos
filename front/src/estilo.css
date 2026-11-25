@@ -1,10 +1,304 @@
+/* ============================================================
+   estilos propios
+   van encima de bootstrap, que carga por cdn desde index.html
+   la paleta sale de los colores del logo del club: azul y rojo
+   ============================================================ */
+
+/* ---------- 1. paleta ---------- */
+
+:root {
+    /* los dos colores del logo, van solo en acentos */
+    --club-azul: #1A1AAE;
+    --club-rojo: #D80000;
+    --club-azul-hover: #13138A;
+    --club-rojo-hover: #A50000;
+
+    /* el grafito es el color de las zonas oscuras: navbar y cabecera de tablas
+       lo elegi neutro a proposito, asi el azul y el rojo del logo resaltan
+       y no compiten con un fondo del mismo color */
+    --club-grafito: #16181D;
+    --club-grafito-suave: #272A33;
+
+    /* neutros */
+    --club-fondo: #F7F8FA;
+    --club-superficie: #FFFFFF;
+    --club-borde: #E4E6EC;
+    --club-texto: #16181D;
+    --club-texto-suave: #6B7080;
+
+    --club-radio: 14px;
+}
+
+/* le paso mi paleta a las variables de bootstrap
+   asi todo el framework la usa sin tener que pelear clase por clase */
+:root {
+    --bs-body-bg: var(--club-fondo);
+    --bs-body-color: var(--club-texto);
+    --bs-primary: var(--club-azul);
+    --bs-primary-rgb: 26, 26, 174;
+    --bs-danger: var(--club-rojo);
+    --bs-danger-rgb: 216, 0, 0;
+    --bs-border-color: var(--club-borde);
+    --bs-link-color: var(--club-azul);
+    --bs-link-hover-color: var(--club-azul-hover);
+}
+
+/* ---------- 2. base ---------- */
+
+body {
+    background-color: var(--club-fondo);
+    color: var(--club-texto);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -.01em;
+}
+
 .contenido {
     padding: 0 50px;
 }
 
-nav{
+/* el foco del teclado tiene que verse, es accesibilidad */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--club-azul);
+    outline-offset: 2px;
+}
+
+/* ---------- 3. barra de navegacion ---------- */
+
+nav {
     padding: 0 50px;
 }
+
+.navbar {
+    background-color: var(--club-grafito) !important;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .06), 0 2px 12px rgba(22, 24, 29, .12);
+}
+
+.navbar .nav-link {
+    color: rgba(255, 255, 255, .75);
+    border-radius: 999px;
+    padding: .35rem .9rem;
+    transition: background-color .15s, color .15s;
+}
+
+.navbar .nav-link:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, .12);
+}
+
+.navbar-text {
+    color: rgba(255, 255, 255, .75);
+}
+
+/* ---------- 4. botones ---------- */
+
+.btn {
+    border-radius: 999px;
+    font-weight: 500;
+    padding-inline: 1.1rem;
+}
+
+.btn-primary {
+    background-color: var(--club-azul);
+    border-color: var(--club-azul);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--club-azul-hover);
+    border-color: var(--club-azul-hover);
+}
+
+/* el boton de crear usa el azul del logo, no el verde de bootstrap */
+.btn-success {
+    background-color: var(--club-azul);
+    border-color: var(--club-azul);
+}
+
+.btn-success:hover {
+    background-color: var(--club-azul-hover);
+    border-color: var(--club-azul-hover);
+}
+
+/* el rojo del logo queda para la accion destructiva */
+.btn-danger {
+    background-color: var(--club-rojo);
+    border-color: var(--club-rojo);
+}
+
+.btn-danger:hover {
+    background-color: var(--club-rojo-hover);
+    border-color: var(--club-rojo-hover);
+}
+
+/* editar en gris, para que no compita con las otras dos acciones */
+.btn-warning {
+    background-color: #fff;
+    border-color: var(--club-borde);
+    color: var(--club-texto-suave);
+}
+
+.btn-warning:hover {
+    background-color: var(--club-texto);
+    border-color: var(--club-texto);
+    color: #fff;
+}
+
+.btn-secondary {
+    background-color: #fff;
+    border-color: var(--club-borde);
+    color: var(--club-texto);
+}
+
+.btn-secondary:hover {
+    background-color: var(--club-texto);
+    border-color: var(--club-texto);
+    color: #fff;
+}
+
+/* los filtros de seccion: el elegido queda relleno, los demas en blanco */
+.filtros-seccion .btn-primary {
+    background-color: #fff;
+    border-color: var(--club-borde);
+    color: var(--club-texto-suave);
+}
+
+.filtros-seccion .btn-primary:hover {
+    border-color: var(--club-azul);
+    color: var(--club-azul);
+}
+
+.filtros-seccion .btn-secondary {
+    background-color: var(--club-azul);
+    border-color: var(--club-azul);
+    color: #fff;
+}
+
+
+/* la barra de filtros se acomoda en varias filas cuando no entra a lo ancho
+   antes el desplegable de profesores quedaba aplastado contra el boton */
+.barra-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.filtros-seccion {
+    flex-wrap: wrap;
+    gap: .35rem;
+}
+
+.filtros-seccion .btn {
+    margin: 0 !important;
+}
+
+.filtros-seccion .form-select {
+    min-width: 210px;
+}
+
+/* ---------- 5. tarjetas ---------- */
+
+.card {
+    background-color: var(--club-superficie);
+    border: 1px solid var(--club-borde);
+    border-radius: var(--club-radio);
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 10px rgba(28, 28, 46, .06) !important;
+}
+
+/* ---------- 6. tablas ---------- */
+
+.table {
+    --bs-table-bg: var(--club-superficie);
+    border-color: var(--club-borde);
+    overflow: hidden;
+    border-radius: var(--club-radio);
+}
+
+/* la cabecera toma el azul del club en vez del negro de bootstrap */
+.table > thead.table-dark {
+    --bs-table-bg: var(--club-grafito);
+    --bs-table-color: #fff;
+}
+
+.table > thead th {
+    font-weight: 600;
+    font-size: .9rem;
+    padding: .9rem .75rem;
+    border-color: transparent;
+}
+
+.table > tbody td {
+    padding: .75rem;
+    vertical-align: middle;
+    border-color: var(--club-borde);
+}
+
+.table-hover > tbody > tr:hover > * {
+    --bs-table-accent-bg: rgba(26, 26, 174, .04);
+}
+
+.table-responsive {
+    border-radius: var(--club-radio);
+    border: 1px solid var(--club-borde);
+    background-color: var(--club-superficie);
+}
+
+/* las imagenes de las filas, todas del mismo tamaño */
+.table td img {
+    width: 92px;
+    height: 62px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* ---------- 7. formularios ---------- */
+
+.form-control,
+.form-select {
+    border: 1px solid var(--club-borde);
+    border-radius: 10px;
+    padding: .6rem .9rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--club-azul);
+    box-shadow: 0 0 0 3px rgba(26, 26, 174, .12);
+}
+
+.form-label {
+    font-size: .88rem;
+    font-weight: 500;
+    color: var(--club-texto-suave);
+    margin-bottom: .35rem;
+}
+
+/* ---------- 8. avisos ---------- */
+
+.alert {
+    border-radius: var(--club-radio);
+    border-width: 1px;
+}
+
+.alert-danger {
+    background-color: rgba(216, 0, 0, .07);
+    border-color: rgba(216, 0, 0, .3);
+    color: #8C0000;
+}
+
+/* ---------- 9. recortes de texto en las tablas ---------- */
 
 .descripcion-evento {
     max-width: 250px;
@@ -20,11 +314,13 @@ nav{
     text-overflow: ellipsis;
 }
 
+/* ---------- 10. cartel de sin resultados ---------- */
+
 .evento-sin-resultados-icono {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #f1f3f5;
+    background-color: var(--club-fondo);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -35,10 +331,11 @@ nav{
     max-width: 500px;
 }
 
+/* ---------- 11. imagenes de eventos ---------- */
 
 .evento-imagen {
     height: 380px;
-    background-color: #f8f9fa;
+    background-color: var(--club-fondo);
     border-radius: 15px;
     overflow: hidden;
 }
@@ -49,6 +346,29 @@ nav{
     object-fit: cover;
 }
 
+.evento-eliminar-imagen {
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.evento-editar-contenedor-imagen,
+.evento-nuevo-contenedor-imagen {
+    height: 300px;
+    background-color: var(--club-fondo);
+    border-radius: 10px;
+}
+
+.evento-editar-imagen,
+.evento-nuevo-imagen {
+    max-height: 280px;
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+/* ---------- 12. fotos de profesores ---------- */
+
 .profesor-imagen {
     width: 70px;
     height: 70px;
@@ -56,36 +376,11 @@ nav{
     border-radius: 50%;
 }
 
-
-.evento-eliminar-imagen {
-    width: 100%;
-    max-height: 350px;
-    object-fit: cover;
-}
-
-.evento-editar-contenedor-imagen {
-    height: 300px;
-}
-
-.evento-editar-imagen {
-    max-height: 280px;
-    max-width: 100%;
-}
-
-.evento-nuevo-contenedor-imagen {
-    height: 300px;
-}
-
-.evento-nuevo-imagen {
-    max-height: 280px;
-    max-width: 100%;
-}
-
 .profesor-foto-contenedor {
     width: 170px;
     height: 170px;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: var(--club-fondo);
+    border: 1px solid var(--club-borde);
     border-radius: 50%;
     overflow: hidden;
 }
@@ -100,3 +395,25 @@ nav{
     display: none;
 }
 
+/* en la tabla de profesores la foto va redonda */
+.tabla-profesores td img {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+}
+
+/* ---------- 13. pantallas chicas ---------- */
+
+@media (max-width: 991.98px) {
+    .contenido,
+    nav {
+        padding: 0 16px;
+    }
+
+    .navbar .navbar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .35rem;
+        margin-block: .6rem;
+    }
+}

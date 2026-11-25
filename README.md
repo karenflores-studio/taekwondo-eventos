@@ -164,23 +164,25 @@ parcial2/
 │
 ├── back/                          API REST
 │   ├── api/
-│   │   ├── controllers/           coordinan los pedidos de la api y devuelven json
+│   │   ├── controllers/           coordinan los pedidos y devuelven json
 │   │   └── routes/                mapean url + verbo a cada controller
 │   ├── services/                  ⭐ unica capa que habla con mongo
 │   ├── middlewares/               autenticacion (jwt) y validacion (zod)
 │   ├── schemas/                   esquemas de zod de cada entidad
-│   ├── controllers/ routes/ views/ page/    vistas html, heredadas del parcial anterior
-│   ├── public/
+│   ├── prueba.http                peticiones de ejemplo para probar la api
 │   └── main.js                    punto de entrada
 │
 └── front/                         aplicación React
     └── src/
-        ├── components/            Layout, Nav y ProtectedRoute
+        ├── components/            Layout, Nav, ProtectedRoute y los de las tablas
+        │   ├── eventos/           EventoFila
+        │   └── profesores/        ProfesorFila
         ├── context/               SessionProvider: estado global de la sesión
         ├── hooks/                 useValidacion, hook propio de validación
         ├── pages/                 una carpeta por entidad
         ├── schemas/               esquemas de zod, espejo de los del backend
         ├── services/              ⭐ toda la comunicación con la API
+        ├── estilo.css             paleta e identidad visual propia
         └── main.jsx               ruteo
 ```
 
@@ -300,7 +302,11 @@ La validación del frontend es por comodidad de quien usa la aplicación: **la q
 
 **Manejo de errores.** Cada controller está envuelto en `try/catch`: el detalle se registra en la consola del servidor y al cliente se le devuelve un mensaje genérico, para no exponer rutas internas ni datos de conexión.
 
-**El rol no viaja desde el cliente.** El registro siempre crea usuarios con rol `user`. El rol se lee del token firmado, no de lo que mande el navegador.
+**El rol no viaja desde el cliente.** El registro siempre crea usuarios con rol `user`. En el backend el rol se lee del token firmado, y en el frontend también: `useRol()` decodifica el JWT con `jwt-decode` en lugar de leer el rol de `localStorage`. Si se leyera de ahí, cualquiera podría editarlo desde la consola del navegador y ver la interfaz de administrador.
+
+**Sesión vencida.** Al abrir la aplicación se revisa la fecha de expiración del token guardado: si ya venció, no se restaura la sesión y se pide iniciar sesión de nuevo.
+
+**Estados de carga.** Las listas manejan tres estados (`loading`, `ready`, `error`) con componentes separados, así se distingue "está cargando" de "no hay datos" y de "falló la consulta".
 
 **Borrado lógico de eventos.** Los eventos se marcan con `eliminado` en lugar de borrarse, así se pueden recuperar.
 

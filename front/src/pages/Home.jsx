@@ -1,11 +1,14 @@
 import { Link } from 'react-router'
-import { useUsuario } from '../context/session.context'
+import { useUsuario, useRol } from '../context/session.context'
 
 // pagina de inicio
 // muestra accesos distintos segun el rol de quien entro
 export default function Home() {
     const usuario = useUsuario()
-    const esAdmin = usuario?.rol === 'admin'
+
+    // el rol sale del token firmado, no del objeto guardado
+    const rol = useRol()
+    const esAdmin = rol() === 'admin'
 
     return (
         <div className="container py-4">

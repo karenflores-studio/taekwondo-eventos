@@ -1,33 +1,47 @@
-
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { useApiEventos } from '../../services/eventos.service'
 import { useApiProfesores } from '../../services/profesores.service'
-import { useUsuario } from '../../context/session.context'
+import { useRol } from '../../context/session.context'
+import EventoFila from '../../components/eventos/EventoFila'
+import TablaCargando from '../../components/TablaCargando'
+import TablaError from '../../components/TablaError'
+
+const COLUMNAS = 8
 
 export default function Eventos() {
     const [eventos, setEventos] = useState([])
     const [profesores, setProfesores] = useState([])
+
+    // tres estados posibles: mientras carga, cuando llego bien, o cuando fallo
+    const [estado, setEstado] = useState('loading')
+
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
-    const usuario = useUsuario()
+    const rol = useRol()
 
     const seccion = searchParams.get('seccion') || ''
     const profesor = searchParams.get('profesor') || ''
-    const esAdmin = usuario?.rol === 'admin'
+    // el rol sale del token firmado, no del objeto guardado
+    const esAdmin = rol() === 'admin'
 
     const { getEventos } = useApiEventos()
     const { getProfesores } = useApiProfesores()
 
     useEffect(() => {
+        setEstado('loading')
+
         // el service se encarga de armar la query con los filtros
         getEventos({ seccion, profesor })
-            .then(data => setEventos(data))
-            .catch(error => console.log(error))
+            .then(data => {
+                setEventos(data)
+                setEstado('ready')
+            })
+            .catch(() => setEstado('error'))
 
         getProfesores()
             .then(data => setProfesores(data))
-            .catch(error => console.log(error))
+            .catch(() => setProfesores([]))
     }, [seccion, profesor])
 
     const cambiarFiltro = (nuevaSeccion) => {
@@ -57,10 +71,32 @@ export default function Eventos() {
         { valor: 'entrenamientos', nombre: 'Entrenamientos' }
     ]
 
+    // elijo que mostrar dentro de la tabla segun en que estado esta el pedido
+    let contenido
+
+    switch (estado) {
+        case 'loading':
+            contenido = <TablaCargando columnas={COLUMNAS} />
+            break
+        case 'ready':
+            contenido = <EventoFila eventos={eventos} esAdmin={esAdmin} />
+            break
+        default:
+            contenido = (
+                <TablaError
+                    columnas={COLUMNAS}
+                    mensaje="No se pudieron cargar los eventos. Revisá que el servidor esté funcionando."
+                />
+            )
+    }
+
+    // si el pedido salio bien pero no hay resultados, muestro un cartel en vez de la tabla
+    const sinResultados = estado === 'ready' && eventos.length === 0
+
     return (
         <>
-            <div className="my-3 d-flex justify-content-between align-items-center">
-                <div className="d-flex align-items-center">
+            <div className="my-3 barra-filtros">
+                <div className="d-flex align-items-center filtros-seccion">
                     {categorias.map(categoria => (
                         <button
                             key={categoria.valor}
@@ -96,85 +132,7 @@ export default function Eventos() {
                 )}
             </div>
 
-            {eventos.length > 0 ? (
-                <div className="table-responsive">
-                    <table className="table table-bordered table-hover align-middle">
-                        <thead className="table-dark">
-                            <tr>
-                                <th>Imagen</th>
-                                <th className="nombre-evento">Nombre</th>
-                                <th className="descripcion-evento">Descripción</th>
-                                <th>Fecha</th>
-                                <th>Horario</th>
-                                <th className="nombre-evento">Lugar</th>
-                                <th>Tipo de evento</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {eventos.map(evento => (
-                                <tr key={evento._id}>
-                                    <td>
-                                        <img
-                                            src={evento.img}
-                                            alt={evento.nombre}
-                                            width="100"
-                                        />
-                                    </td>
-
-                                    <td className="nombre-evento">
-                                        {evento.nombre}
-                                    </td>
-
-                                    <td className="descripcion-evento">
-                                        {evento.descripcion}
-                                    </td>
-
-                                    <td>{evento.fecha}</td>
-
-                                    <td>{evento.horario || ''}</td>
-
-                                    <td className="nombre-evento">
-                                        {evento.lugar}
-                                    </td>
-
-                                    <td>{evento.seccion}</td>
-
-                                    <td>
-                                        <div className="d-flex gap-1">
-                                            <Link
-                                                to={`/eventos/detalle/${evento._id}`}
-                                                className="btn btn-secondary btn-sm"
-                                            >
-                                                Ver
-                                            </Link>
-
-                                            {esAdmin && (
-                                                <>
-                                                    <Link
-                                                        to={`/eventos/editar/${evento._id}`}
-                                                        className="btn btn-warning btn-sm"
-                                                    >
-                                                        Editar
-                                                    </Link>
-
-                                                    <Link
-                                                        to={`/eventos/eliminar/${evento._id}`}
-                                                        className="btn btn-danger btn-sm"
-                                                    >
-                                                        Borrar
-                                                    </Link>
-                                                </>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            ) : (
+            {sinResultados ? (
                 <div className="card border-0 shadow-sm mt-4">
                     <div className="card-body text-center py-5">
                         <div className="evento-sin-resultados-icono">
@@ -198,6 +156,27 @@ export default function Eventos() {
                             Ver todos los eventos
                         </button>
                     </div>
+                </div>
+            ) : (
+                <div className="table-responsive">
+                    <table className="table table-hover align-middle">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Imagen</th>
+                                <th className="nombre-evento">Nombre</th>
+                                <th className="descripcion-evento">Descripción</th>
+                                <th>Fecha</th>
+                                <th>Horario</th>
+                                <th className="nombre-evento">Lugar</th>
+                                <th>Tipo de evento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {contenido}
+                        </tbody>
+                    </table>
                 </div>
             )}
         </>

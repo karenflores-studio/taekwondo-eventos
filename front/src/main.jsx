@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router'
-import './index.css'
 import './estilo.css'
 
 import { SessionProvider } from './context/session.context.jsx'

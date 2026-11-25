@@ -1,8 +1,201 @@
-### Intentar publicar evento como usuario común
-POST http://localhost:3333/api/eventos
+###############################################################
+# peticiones de ejemplo para probar la api
+# se ejecutan con la extension REST Client de VS Code
+#
+# importante: primero correr el login, porque guarda el token
+# y las demas peticiones lo toman de ahi automaticamente
+###############################################################
+
+@baseUrl = http://localhost:3333/api
+
+###############################################################
+### AUTENTICACION
+###############################################################
+
+### login como administrador  (correr esta primero)
+# @name login
+POST {{baseUrl}}/login
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGNob25naG9uZy5jb20iLCJyb2wiOiJhZG1pbiIsImlhdCI6MTc5NTEzMTk0NiwiZXhwIjoxNzk1MTM5MTQ2fQ.9YAb3GA-MFu8wLFlt08cT2nWY8IENgU68vg4ykCu0V0
 
 {
-    "nombre": "Evento de prueba"
+    "email": "demo.admin@chonghong.com",
+    "password": "Demo.Admin2026"
 }
+
+### el token sale de la respuesta del login
+@token = {{login.response.body.token}}
+
+### login como usuario comun
+# @name loginUser
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "demo.user@chonghong.com",
+    "password": "Demo.User2026"
+}
+
+@tokenUser = {{loginUser.response.body.token}}
+
+### registro de un usuario nuevo
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "email": "nuevo@chonghong.com",
+    "name": "Usuario Nuevo",
+    "password": "Clave.2026",
+    "confirmPassword": "Clave.2026"
+}
+
+### registro con datos invalidos -> 400 con la lista de errores
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "email": "no-es-un-mail",
+    "name": "ab",
+    "password": "corta",
+    "confirmPassword": "otra"
+}
+
+###############################################################
+### EVENTOS
+###############################################################
+
+### traer todos
+GET {{baseUrl}}/eventos
+
+### filtrar por seccion
+GET {{baseUrl}}/eventos?seccion=torneos
+
+### traer uno por id  (pegar un _id de la respuesta de arriba)
+GET {{baseUrl}}/eventos/PEGAR_ID_EVENTO
+
+### id con formato invalido -> 400
+GET {{baseUrl}}/eventos/estonoesunid
+
+### id que no existe -> 404
+GET {{baseUrl}}/eventos/000000000000000000000000
+
+### crear sin token -> 401
+POST {{baseUrl}}/eventos
+Content-Type: application/json
+
+{
+    "nombre": "Evento sin token"
+}
+
+### crear con rol user -> 403
+POST {{baseUrl}}/eventos
+Content-Type: application/json
+Authorization: Bearer {{tokenUser}}
+
+{
+    "nombre": "Evento sin permisos"
+}
+
+### crear con token de admin pero body vacio -> 400 con los errores
+POST {{baseUrl}}/eventos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{}
+
+### crear un evento valido -> 201
+POST {{baseUrl}}/eventos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "img": "https://picsum.photos/seed/evento/400/225",
+    "nombre": "Torneo de prueba",
+    "seccion": "torneos",
+    "descripcion": "Evento creado desde el archivo de peticiones de ejemplo.",
+    "lugar": "Gimnasio municipal",
+    "fecha": "2026-12-20",
+    "horario": "10:30",
+    "link": "https://ejemplo.com/inscripcion",
+    "profesorId": "PEGAR_ID_PROFESOR"
+}
+
+### modificar un evento -> 200
+PUT {{baseUrl}}/eventos/PEGAR_ID_EVENTO
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "img": "https://picsum.photos/seed/evento/400/225",
+    "nombre": "Torneo de prueba modificado",
+    "seccion": "examenes",
+    "descripcion": "Descripcion modificada desde el archivo de peticiones.",
+    "lugar": "Otro gimnasio",
+    "fecha": "2026-12-21",
+    "horario": "11:00",
+    "link": "https://ejemplo.com/inscripcion",
+    "profesorId": "PEGAR_ID_PROFESOR"
+}
+
+### eliminar un evento -> 200
+DELETE {{baseUrl}}/eventos/PEGAR_ID_EVENTO
+Authorization: Bearer {{token}}
+
+###############################################################
+### PROFESORES
+###############################################################
+
+### traer todos
+GET {{baseUrl}}/profesores
+
+### traer uno por id
+GET {{baseUrl}}/profesores/PEGAR_ID_PROFESOR
+
+### los eventos que pertenecen a un profesor
+### devuelve { profesor, total, eventos }: es la relacion entre las dos colecciones
+GET {{baseUrl}}/profesores/PEGAR_ID_PROFESOR/eventos
+
+### crear sin token -> 401
+POST {{baseUrl}}/profesores
+Content-Type: application/json
+
+{
+    "nombre": "Profesor sin token"
+}
+
+### crear un profesor valido -> 201
+POST {{baseUrl}}/profesores
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "foto": "https://picsum.photos/seed/profesor/300/300",
+    "nombre": "Profesor de prueba",
+    "descripcion": "Profesor creado desde el archivo de peticiones de ejemplo."
+}
+
+### modificar un profesor -> 200
+PUT {{baseUrl}}/profesores/PEGAR_ID_PROFESOR
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "foto": "https://picsum.photos/seed/profesor/300/300",
+    "nombre": "Profesor modificado",
+    "descripcion": "Descripcion modificada desde el archivo de peticiones."
+}
+
+### eliminar un profesor que TIENE eventos -> 409
+### no se permite, porque esos eventos quedarian sin profesor
+DELETE {{baseUrl}}/profesores/PEGAR_ID_PROFESOR_CON_EVENTOS
+Authorization: Bearer {{token}}
+
+### eliminar un profesor sin eventos -> 200
+DELETE {{baseUrl}}/profesores/PEGAR_ID_PROFESOR_SIN_EVENTOS
+Authorization: Bearer {{token}}
+
+###############################################################
+### OTROS
+###############################################################
+
+### endpoint que no existe -> 404 en json
+GET {{baseUrl}}/loquesea
