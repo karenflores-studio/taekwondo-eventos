@@ -309,4 +309,3 @@ La validación del frontend es por comodidad de quien usa la aplicación: **la q
 **Estados de carga.** Las listas manejan tres estados (`loading`, `ready`, `error`) con componentes separados, así se distingue "está cargando" de "no hay datos" y de "falló la consulta".
 
 **Borrado lógico de eventos.** Los eventos se marcan con `eliminado` en lugar de borrarse, así se pueden recuperar.
----
